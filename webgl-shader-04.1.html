@@ -15,20 +15,19 @@ uniform 全局变量
 presicion 指定渲染精度（float精度）
 -->
 <script id="shader-vs" type="text/html">
-    presicion lowp float;
-    attribute vec3 vec3Position;
-    varying vec4 color;
+    precision   lowp float;
+    attribute   vec3 vec3Position;
     void main(void){
-    gl_Position = vec4(vec3Position,1);
+        gl_Position = vec4(vec3Position,1);
     }
 </script>
 
 <!--frag shader-->
 <script id="shader-fs" type="text/html">
-    presicion lowp float;
-    varying vec4 color;
+    precision   lowp float;
+    uniform vec4 color;
     void main(void){
-    gl_FragColor = color;
+        gl_FragColor = color;
     }
 </script>
 
@@ -52,13 +51,13 @@ presicion 指定渲染精度（float精度）
     ctx.compileShader(vShader);
     var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
     if (err != true) {
-        console.error(err);
+        console.error(ctx.getShaderInfoLog(vShader));
     }
 
     ctx.compileShader(fShader);
-    var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
+    var err = ctx.getShaderParameter(fShader, ctx.COMPILE_STATUS);
     if (err != true) {
-        console.error(err);
+        console.error(ctx.getShaderInfoLog(fShader));
     }
 
     //给program添加shader
@@ -66,32 +65,30 @@ presicion 指定渲染精度（float精度）
     ctx.attachShader(program, vShader);
     ctx.attachShader(program, fShader);
 
+
     //传递vshader里的vec3Position的索引
-    var vec3PositionIndex = null;
-    var color = null;
-    ctx.bindAttribLocation(program, vec3PositionIndex, "vec3Position");
-    ctx.bindAttribLocation(program, color, "color");
+    var vec3PositionIndex = 0;
+    ctx.bindAttribLocation(program, vec3PositionIndex,  "vec3Position");
 
     //链接program
     ctx.linkProgram(program);
     var err = ctx.getProgramParameter(program, ctx.LINK_STATUS);
     if (err != true) {
-        console.error(err);
+        console.error(ctx.getProgramInfoLog(program));
     }
 
     ctx.useProgram(program);
 
     /*--真正的程序绘制步骤--*/
     var dataArr = [
-        //  x   y   z   r   g   b   a
-        -0.5, 0.5, 0, 1, 0, 0, 1,
-        0.5, 0.5, 0, 0, 1, 0, 1,
-        0.5, -0.5, 0, 0, 0, 1, 1,
-        -0.5, -0.5, 0, 1, 1, 0, 1
+        //x     y       z       r       g       b       a
+        -0.5,   0.5,    0,      1,      0,      0,      1,
+        0.5,    0.5,    0,      0,      1,      0,      1,
+        0.5,    -0.5,   0,      0,      0,      1,      1,
+        -0.5,   -0.5,   0,      1,      1,      0,      1
     ];
 
     var indexArr = [
-        0, 0, 0,
         0, 1, 2,
         0, 2, 3
     ];
@@ -110,20 +107,17 @@ presicion 指定渲染精度（float精度）
     ctx.clearColor(0, 0, 0, 1);
     ctx.clear(ctx.COLOR_BUFFER_BIT);
 
-
     ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
     ctx.enableVertexAttribArray(vec3PositionIndex);
-    ctx.vertexAttribPointer(vec3PositionIndex, 3, ctx.FLOAT, false, 4 * 7, 0);
-    ctx.enableVertexAttribArray(color);
-    ctx.vertexAttribPointer(color, 4, ctx.FLOAT, false, 4 * 7, 4 * 3);
+    ctx.vertexAttribPointer(vec3PositionIndex,  3, ctx.FLOAT, false, 4 * 7, 0);
+
+    var colorUniform = ctx.getUniformLocation(program, "color");
+    ctx.uniform4fv(colorUniform, new Float32Array([1,1,0,1]));
 
     ctx.bindBuffer(ctx.ELEMENT_ARRAY_BUFFER, elementBuffer);
-    /**
-     * void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset);
-     */
-    ctx.drawElements(ctx.TRIANGLES, 6, ctx.UNSIGNED_SHORT, 2 * 3);
+    ctx.drawElements(ctx.TRIANGLES, 6, ctx.UNSIGNED_SHORT, 0);
 
-    ctx.useProgram(0);
+    ctx.useProgram(null);
 </script>
 </body>
 </html>
