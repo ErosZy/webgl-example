@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
+
+<!--
+vertex shader
+attribute 定义变量
+varying 在vs与fs之间传递数据的变量
+uniform 全局变量
+presicion 指定渲染精度（float精度）
+-->
+<script id="shader-vs" type="text/html">
+    presicion lowp float;
+    attribute vec3 vec3Position;
+    varying vec4 color;
+    void main(void){
+    gl_Position = vec4(vec3Position,1);
+    }
+</script>
+
+<!--frag shader-->
+<script id="shader-fs" type="text/html">
+    presicion lowp float;
+    varying vec4 color;
+    void main(void){
+    gl_FragColor = color;
+    }
+</script>
+
+<script>
+    var vShaderScript = document.getElementById("shader-vs").innerHTML;
+    var fShaderScript = document.getElementById("shader-fs").innerHTML;
+    var canvas = document.getElementById("webgl-canvas");
+    var ctx = canvas.getContext("webgl");
+
+    //设置ctx的视口大小
+    ctx.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    var vShader = ctx.createShader(ctx.VERTEX_SHADER);
+    var fShader = ctx.createShader(ctx.FRAGMENT_SHADER);
+
+    //指定shader script
+    ctx.shaderSource(vShader, vShaderScript);
+    ctx.shaderSource(fShader, fShaderScript);
+
+    //编译shader
+    ctx.compileShader(vShader);
+    var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
+    if (err != true) {
+        console.error(err);
+    }
+
+    ctx.compileShader(fShader);
+    var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
+    if (err != true) {
+        console.error(err);
+    }
+
+    //给program添加shader
+    var program = ctx.createProgram();
+    ctx.attachShader(program, vShader);
+    ctx.attachShader(program, fShader);
+
+    //传递vshader里的vec3Position的索引
+    var vec3PositionIndex = null;
+    var color = null;
+    ctx.bindAttribLocation(program, vec3PositionIndex, "vec3Position");
+    ctx.bindAttribLocation(program, color, "color");
+
+    //链接program
+    ctx.linkProgram(program);
+    var err = ctx.getProgramParameter(program, ctx.LINK_STATUS);
+    if (err != true) {
+        console.error(err);
+    }
+
+    ctx.useProgram(program);
+
+    /*--真正的程序绘制步骤--*/
+    var dataArr = [
+        //  x   y   z   r   g   b   a
+        -0.5, 0.5, 0, 1, 0, 0, 1,
+        0.5, 0.5, 0, 0, 1, 0, 1,
+        0.5, -0.5, 0, 0, 0, 1, 1,
+        -0.5, -0.5, 0, 1, 1, 0, 1
+    ];
+
+    var indexArr = [
+        0, 0, 0,
+        0, 1, 2,
+        0, 2, 3
+    ];
+
+    //创建buffer,并给buffer赋值
+    var buffer = ctx.createBuffer();
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(dataArr), ctx.STATIC_DRAW);
+
+    var elementBuffer = ctx.createBuffer();
+    ctx.bindBuffer(ctx.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    ctx.bufferData(ctx.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArr), ctx.STATIC_DRAW);
+
+
+    //清除一次画布
+    ctx.clearColor(0, 0, 0, 1);
+    ctx.clear(ctx.COLOR_BUFFER_BIT);
+
+
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+    ctx.enableVertexAttribArray(vec3PositionIndex);
+    ctx.vertexAttribPointer(vec3PositionIndex, 3, ctx.FLOAT, false, 4 * 7, 0);
+    ctx.enableVertexAttribArray(color);
+    ctx.vertexAttribPointer(color, 4, ctx.FLOAT, false, 4 * 7, 4 * 3);
+
+    ctx.bindBuffer(ctx.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    /**
+     * void drawElements(GLenum mode, GLsizei count, GLenum type, GLintptr offset);
+     */
+    ctx.drawElements(ctx.TRIANGLES, 6, ctx.UNSIGNED_SHORT, 2 * 3);
+
+    ctx.useProgram(0);
+</script>
+</body>
+</html>

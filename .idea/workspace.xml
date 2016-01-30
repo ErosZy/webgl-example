@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a26d9f7-e6d5-4aa8-983a-37a7ae03a1dc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webgl-element-03.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webgl-shader-04.1.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webgl-shader-04.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="webgl-learn.iws" />
@@ -25,11 +26,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="webgl-element-03.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="webgl-01.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webgl-01.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="33.625">
+              <caret line="14" column="13" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="13" />
+              <folding>
+                <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webgl-shader-04.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/webgl-shader-04.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.09950249">
+              <caret line="71" column="4" selection-start-line="71" selection-start-column="4" selection-end-line="79" selection-end-column="67" />
+              <folding>
+                <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webgl-shader-04.1.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webgl-shader-04.1.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.25">
+              <caret line="10" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="128" selection-end-column="7" />
+              <folding>
+                <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webgl-element-03.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webgl-element-03.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.82587063">
-              <caret line="111" column="60" selection-start-line="111" selection-start-column="60" selection-end-line="111" selection-end-column="60" />
+            <state vertical-scroll-proportion="-3.0">
+              <caret line="60" column="30" selection-start-line="0" selection-start-column="0" selection-end-line="118" selection-end-column="7" />
               <folding>
                 <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -59,6 +96,8 @@
         <option value="$PROJECT_DIR$/webgl-vertex-02.1.html" />
         <option value="$PROJECT_DIR$/webgl-vertex-02.2.html" />
         <option value="$PROJECT_DIR$/webgl-element-03.html" />
+        <option value="$PROJECT_DIR$/webgl-shader-04.1.html" />
+        <option value="$PROJECT_DIR$/webgl-shader-04.html" />
       </list>
     </option>
   </component>
@@ -74,7 +113,7 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="47" />
+    <option name="x" value="-413" />
     <option name="y" value="23" />
     <option name="width" value="1319" />
     <option name="height" value="745" />
@@ -472,15 +511,15 @@
       <workItem from="1453857672787" duration="2659000" />
       <workItem from="1453861706838" duration="2746000" />
       <workItem from="1454154362117" duration="2929000" />
-      <workItem from="1454157580084" duration="1222000" />
+      <workItem from="1454157580084" duration="6609000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12509000" />
+    <option name="totallyTimeSpent" value="17896000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="47" y="23" width="1319" height="745" extended-state="6" />
+    <frame x="-413" y="23" width="1319" height="745" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -604,20 +643,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webgl-01.html">
+    <entry file="file://$PROJECT_DIR$/webgl-element-03.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37810946">
-          <caret line="83" column="22" selection-start-line="0" selection-start-column="0" selection-end-line="102" selection-end-column="7" />
+        <state vertical-scroll-proportion="-3.0">
+          <caret line="60" column="30" selection-start-line="0" selection-start-column="0" selection-end-line="118" selection-end-column="7" />
           <folding>
             <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webgl-element-03.html">
+    <entry file="file://$PROJECT_DIR$/webgl-01.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.82587063">
-          <caret line="111" column="60" selection-start-line="111" selection-start-column="60" selection-end-line="111" selection-end-column="60" />
+        <state vertical-scroll-proportion="33.625">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="13" />
+          <folding>
+            <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-shader-04.1.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.25">
+          <caret line="10" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="128" selection-end-column="7" />
+          <folding>
+            <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-shader-04.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.09950249">
+          <caret line="71" column="4" selection-start-line="71" selection-start-column="4" selection-end-line="79" selection-end-column="67" />
           <folding>
             <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
