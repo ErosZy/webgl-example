@@ -7,7 +7,13 @@
 <body>
     <canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
 
-    <!--vec shader-->
+    <!--
+    vertex shader
+    attribute 定义变量
+    varying 在vs与fs之间传递数据的变量
+    uniform 全局变量
+    presicion 指定渲染精度（float精度）
+    -->
     <script id="shader-vs" type="text/html">
         attribute vec3 vec3Position;
         void main(void){
@@ -18,7 +24,7 @@
     <!--frag shader-->
     <script id="shader-fs" type="text/html">
         void main(void){
-            gl_FragColor = vec4(0,1,0,1);
+            gl_FragColor = vec4(1,1,0,1);
         }
     </script>
 
@@ -69,10 +75,13 @@
 
         ctx.useProgram(program);
 
+        /*--真正的程序绘制步骤--*/
         var dataArr = [
-            0,  0,  0,
+        //  x   y   z  nx ny nz
+            0,  1,  0,
             -1, -1, 0,
-            1,  -1, 0
+            1,  -1, 0,
+            0,   1, 0,
         ];
 
         //创建buffer,并给buffer赋值
@@ -84,9 +93,10 @@
         ctx.clearColor(0,0,0,1);
         ctx.clear(ctx.COLOR_BUFFER_BIT);
 
+
         ctx.bindBuffer(ctx.ARRAY_BUFFER,buffer);
         ctx.enableVertexAttribArray(vec3PositionIndex);
-        ctx.vertexAttribPointer(vec3PositionIndex,3,ctx.FLOAT,false,0,0);
+        ctx.vertexAttribPointer(vec3PositionIndex,3,ctx.FLOAT,false,0,3*4);
         ctx.drawArrays(ctx.TRIANGLES,0,3);
     </script>
 </body>

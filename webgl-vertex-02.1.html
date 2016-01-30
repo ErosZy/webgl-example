@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
+
+<!--
+vertex shader
+attribute 定义变量
+varying 在vs与fs之间传递数据的变量
+uniform 全局变量
+presicion 指定渲染精度（float精度）
+-->
+<script id="shader-vs" type="text/html">
+    attribute vec3 vec3Position;
+    void main(void){
+    gl_Position = vec4(vec3Position,1);
+    }
+</script>
+
+<!--frag shader-->
+<script id="shader-fs" type="text/html">
+    void main(void){
+    gl_FragColor = vec4(1,1,0,1);
+    }
+</script>
+
+<script>
+    var vShaderScript = document.getElementById("shader-vs").innerHTML;
+    var fShaderScript = document.getElementById("shader-fs").innerHTML;
+    var canvas = document.getElementById("webgl-canvas");
+    var ctx = canvas.getContext("webgl");
+
+    //设置ctx的视口大小
+    ctx.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    var vShader = ctx.createShader(ctx.VERTEX_SHADER);
+    var fShader = ctx.createShader(ctx.FRAGMENT_SHADER);
+
+    //指定shader script
+    ctx.shaderSource(vShader, vShaderScript);
+    ctx.shaderSource(fShader, fShaderScript);
+
+    //编译shader
+    ctx.compileShader(vShader);
+    var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
+    if (err != true) {
+        console.error(err);
+    }
+
+    ctx.compileShader(fShader);
+    var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
+    if (err != true) {
+        console.error(err);
+    }
+
+    //给program添加shader
+    var program = ctx.createProgram();
+    ctx.attachShader(program, vShader);
+    ctx.attachShader(program, fShader);
+
+    //传递vshader里的vec3Position的索引
+    var vec3PositionIndex = null;
+    ctx.bindAttribLocation(program, vec3PositionIndex, "vec3Position");
+
+    //链接program
+    ctx.linkProgram(program);
+    var err = ctx.getProgramParameter(program, ctx.LINK_STATUS);
+    if (err != true) {
+        console.error(err);
+    }
+
+    ctx.useProgram(program);
+
+    /*--真正的程序绘制步骤--*/
+    var dataArr = [
+        //  x   y   z  nx ny nz
+        0, 0, 0, 0, 0, 0,
+        0, 1, 0, 0, 0, 0,
+        -1, -1, 0, 1, 0, 0,
+        1, -1, 0, 0, 0, 0
+    ];
+    //创建buffer,并给buffer赋值
+    var buffer = ctx.createBuffer();
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(dataArr), ctx.STATIC_DRAW);
+
+
+    //清除一次画布
+    ctx.clearColor(0, 0, 0, 1);
+    ctx.clear(ctx.COLOR_BUFFER_BIT);
+
+
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+    ctx.enableVertexAttribArray(vec3PositionIndex);
+
+    /**
+     * void vertexAttribPointer(GLuint indx, GLint size, GLenum type,
+                                GLboolean normalized, GLsizei stride, GLintptr offset);
+
+     size: 多少组(与vs里面进行对应）
+     normalized: 是否规格化（例如法线是需要规格化的）
+     stride: 总字节数，多少字节为一组
+     offset: 偏移多少字节数进行第一次读取
+     */
+    ctx.vertexAttribPointer(vec3PositionIndex, 3, ctx.FLOAT, false, 4 * 3, 4 * 6);
+
+    /**
+     * void drawArrays(GLenum mode, GLint first, GLsizei count);
+     * first: 从第几组开始读取
+     * count: 一共读几组
+     */
+    ctx.drawArrays(ctx.TRIANGLES, 1, 3);
+</script>
+</body>
+</html>
