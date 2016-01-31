@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
+
+<script src="./libs/gl-matrix.js"></script>
+
+<!--
+vertex shader
+attribute 定义变量
+varying 在vs与fs之间传递数据的变量
+uniform 全局变量
+presicion 指定渲染精度（float精度）
+-->
+<script id="shader-vs" type="text/html">
+    precision   lowp float;
+    uniform     mat4 proj;
+    attribute   vec3 vec3Position;
+    attribute   vec4 inColor;
+    varying     vec4 outColor;
+    void main(void){
+    outColor = inColor;
+        gl_Position = proj * vec4(vec3Position,1);
+    }
+</script>
+
+<!--frag shader-->
+<script id="shader-fs" type="text/html">
+    precision   lowp float;
+    varying     vec4 outColor;
+    void main(void){
+        gl_FragColor = outColor;
+    }
+</script>
+
+<script>
+    var vShaderScript = document.getElementById("shader-vs").innerHTML;
+    var fShaderScript = document.getElementById("shader-fs").innerHTML;
+    var canvas = document.getElementById("webgl-canvas");
+    var gl = canvas.getContext("webgl");
+    var projMat4 = mat4.create();
+
+    //设置gl的视口大小
+    gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    //创建正交矩阵
+    mat4.ortho(projMat4,0,canvas.clientWidth,canvas.clientHeight,0,-1000,1000);
+
+    var vShader = gl.createShader(gl.VERTEX_SHADER);
+    var fShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+    //指定shader script
+    gl.shaderSource(vShader, vShaderScript);
+    gl.shaderSource(fShader, fShaderScript);
+
+    //编译shader
+    gl.compileShader(vShader);
+    var err = gl.getShaderParameter(vShader, gl.COMPILE_STATUS);
+    if (err != true) {
+        console.error(gl.getShaderInfoLog(vShader));
+    }
+
+    gl.compileShader(fShader);
+    var err = gl.getShaderParameter(fShader, gl.COMPILE_STATUS);
+    if (err != true) {
+        console.error(gl.getShaderInfoLog(fShader));
+    }
+
+    //给program添加shader
+    var program = gl.createProgram();
+    gl.attachShader(program, vShader);
+    gl.attachShader(program, fShader);
+
+
+    //传递vshader里的vec3Position的索引
+    var vec3PositionIndex = 0;
+    var inColor = 1;
+
+    /**
+     * void bindAttribLocation(WebGLProgram? program, GLuint index, DOMString name);
+     */
+    gl.bindAttribLocation(program, vec3PositionIndex,  "vec3Position");
+    gl.bindAttribLocation(program, inColor,            "inColor");
+
+    //链接program
+    gl.linkProgram(program);
+    var err = gl.getProgramParameter(program, gl.LINK_STATUS);
+    if (err != true) {
+        console.error(gl.getProgramInfoLog(program));
+    }
+
+    gl.useProgram(program);
+
+    /*--真正的程序绘制步骤--*/
+    var dataArr = [
+        //x     y       z       r       g       b       a
+        0,      0,      0,      1,      0,      0,      1,
+        100,    0,      0,      0,      1,      0,      1,
+        100,    100,    0,      0,      0,      1,      1,
+        0,      100,    0,      1,      1,      0,      1
+    ];
+
+    var indexArr = [
+        0,1,2,
+        0,2,3
+    ];
+
+    //创建buffer,并给buffer赋值
+    var buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataArr), gl.STATIC_DRAW);
+
+    var elementBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArr), gl.STATIC_DRAW);
+
+
+    //清除一次画布
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+    gl.enableVertexAttribArray(vec3PositionIndex);
+    gl.vertexAttribPointer(vec3PositionIndex,  3, gl.FLOAT, false, 4 * 7, 0);
+    gl.enableVertexAttribArray(inColor);
+    gl.vertexAttribPointer(inColor,            4, gl.FLOAT, false, 4 * 7, 4 * 3);
+
+    var proj = gl.getUniformLocation(program,"proj");
+    gl.uniformMatrix4fv(proj, false, new Float32Array(projMat4));
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
+
+  /*
+      const GLenum LINES                          = 0x0001;
+      const GLenum LINE_LOOP                      = 0x0002;
+      const GLenum LINE_STRIP                     = 0x0003;
+      const GLenum TRIANGLES                      = 0x0004;
+      const GLenum TRIANGLE_STRIP                 = 0x0005;
+      const GLenum TRIANGLE_FAN                   = 0x0006;
+   */
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+
+    gl.useProgram(null);
+
+</script>
+</body>
+</html>
