@@ -17,13 +17,12 @@ presicion 指定渲染精度（float精度）
 <script id="shader-vs" type="text/html">
     precision   lowp float;
     attribute   vec3 vec3Position;
-    uniform     mat4 translateMatrix4;
     uniform     mat4 scaleMatrix4;
     attribute   vec4 inColor;
     varying     vec4 outColor;
     void main(void){
     outColor = inColor;
-        gl_Position = scaleMatrix4 * translateMatrix4 * vec4(vec3Position,1);
+        gl_Position = scaleMatrix4 * vec4(vec3Position,1);
     }
 </script>
 
@@ -31,8 +30,9 @@ presicion 指定渲染精度（float精度）
 <script id="shader-fs" type="text/html">
     precision   lowp float;
     varying     vec4 outColor;
+    uniform     mat4 translateMatrix4;
     void main(void){
-        gl_FragColor = outColor;
+        gl_FragColor = translateMatrix4 * outColor;
     }
 </script>
 
@@ -99,7 +99,7 @@ presicion 指定渲染精度（float精度）
     }
 
     function draw(){
-        count += 0.01;
+        count += 0.05;
 
        /*--真正的程序绘制步骤--*/
         var dataArr = [

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
+
+<script src="./libs/gl-matrix.js"></script>
+
+<!--
+vertex shader
+attribute 定义变量
+varying 在vs与fs之间传递数据的变量
+uniform 全局变量
+presicion 指定渲染精度（float精度）
+-->
+<script id="shader-vs" type="text/html">
+    precision   lowp float;
+    uniform     mat4 proj;
+    attribute   vec3 vec3Position;
+    attribute   vec4 inColor;
+    varying     vec4 outColor;
+    void main(void){
+    outColor = inColor;
+        gl_Position = proj * vec4(vec3Position,1);
+    }
+</script>
+
+<!--frag shader-->
+<script id="shader-fs" type="text/html">
+    precision   lowp float;
+    varying     vec4 outColor;
+    void main(void){
+        gl_FragColor = outColor;
+    }
+</script>
+
+<script>
+    var vShaderScript = document.getElementById("shader-vs").innerHTML;
+    var fShaderScript = document.getElementById("shader-fs").innerHTML;
+    var canvas = document.getElementById("webgl-canvas");
+    var ctx = canvas.getContext("webgl");
+    var projMat4 = mat4.create();
+
+    //设置ctx的视口大小
+    ctx.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    //创建正交矩阵
+    mat4.ortho(projMat4,0,canvas.clientWidth,canvas.clientHeight,0,-1000,1000);
+
+    var vShader = ctx.createShader(ctx.VERTEX_SHADER);
+    var fShader = ctx.createShader(ctx.FRAGMENT_SHADER);
+
+    //指定shader script
+    ctx.shaderSource(vShader, vShaderScript);
+    ctx.shaderSource(fShader, fShaderScript);
+
+    //编译shader
+    ctx.compileShader(vShader);
+    var err = ctx.getShaderParameter(vShader, ctx.COMPILE_STATUS);
+    if (err != true) {
+        console.error(ctx.getShaderInfoLog(vShader));
+    }
+
+    ctx.compileShader(fShader);
+    var err = ctx.getShaderParameter(fShader, ctx.COMPILE_STATUS);
+    if (err != true) {
+        console.error(ctx.getShaderInfoLog(fShader));
+    }
+
+    //给program添加shader
+    var program = ctx.createProgram();
+    ctx.attachShader(program, vShader);
+    ctx.attachShader(program, fShader);
+
+
+    //传递vshader里的vec3Position的索引
+    var vec3PositionIndex = 0;
+    var inColor = 1;
+
+    /**
+     * void bindAttribLocation(WebGLProgram? program, GLuint index, DOMString name);
+     */
+    ctx.bindAttribLocation(program, vec3PositionIndex,  "vec3Position");
+    ctx.bindAttribLocation(program, inColor,            "inColor");
+
+    //链接program
+    ctx.linkProgram(program);
+    var err = ctx.getProgramParameter(program, ctx.LINK_STATUS);
+    if (err != true) {
+        console.error(ctx.getProgramInfoLog(program));
+    }
+
+    ctx.useProgram(program);
+
+    /*--真正的程序绘制步骤--*/
+    var dataArr = [
+        //x     y       z       r       g       b       a
+        0,   100,    0,      1,      0,      0,      1,
+        100,    100,    0,      0,      1,      0,      1,
+        100,    0,   0,      0,      0,      1,      1,
+        0,   0,   0,      1,      1,      0,      1
+    ];
+
+    var indexArr = [
+        0, 1, 2,
+        0, 2, 3
+    ];
+
+    //创建buffer,并给buffer赋值
+    var buffer = ctx.createBuffer();
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+    ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(dataArr), ctx.STATIC_DRAW);
+
+    var elementBuffer = ctx.createBuffer();
+    ctx.bindBuffer(ctx.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    ctx.bufferData(ctx.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArr), ctx.STATIC_DRAW);
+
+
+    //清除一次画布
+    ctx.clearColor(0, 0, 0, 1);
+    ctx.clear(ctx.COLOR_BUFFER_BIT);
+
+    ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+
+    ctx.enableVertexAttribArray(vec3PositionIndex);
+    ctx.vertexAttribPointer(vec3PositionIndex,  3, ctx.FLOAT, false, 4 * 7, 0);
+    ctx.enableVertexAttribArray(inColor);
+    ctx.vertexAttribPointer(inColor,            4, ctx.FLOAT, false, 4 * 7, 4 * 3);
+
+    var proj = ctx.getUniformLocation(program,"proj");
+    ctx.uniformMatrix4fv(proj, false, new Float32Array(projMat4));
+
+    ctx.bindBuffer(ctx.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    ctx.drawElements(ctx.TRIANGLES, 6, ctx.UNSIGNED_SHORT, 0);
+
+    ctx.useProgram(null);
+</script>
+</body>
+</html>
