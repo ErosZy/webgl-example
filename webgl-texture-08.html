@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
+
+<script src="./libs/gl-matrix.js"></script>
+
+<!--
+vertex shader
+attribute 定义变量
+varying 在vs与fs之间传递数据的变量
+uniform 全局变量
+presicion 指定渲染精度（float精度）
+-->
+<script id="shader-vs" type="text/html">
+    precision   lowp    float;
+    uniform     mat4    proj;
+    attribute   vec3    vec3Position;
+    attribute   vec2    uvIndex;
+    varying     vec2    outUV;
+    void main(void){
+        outUV = uvIndex;
+        gl_Position = proj * vec4(vec3Position,1);
+    }
+</script>
+
+<!--frag shader-->
+<script id="shader-fs" type="text/html">
+    precision   lowp        float;
+    uniform     sampler2D   texture;
+    varying     vec2        outUV;
+    void main(void){
+        gl_FragColor = texture2D(texture, vec2(outUV.s, outUV.t));
+    }
+</script>
+
+<script>
+    var vShaderScript = document.getElementById("shader-vs").innerHTML;
+    var fShaderScript = document.getElementById("shader-fs").innerHTML;
+    var canvas = document.getElementById("webgl-canvas");
+    var gl = canvas.getContext("webgl");
+    var projMat4 = mat4.create();
+    var texture = null;
+
+    //设置gl的视口大小
+    gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    //创建正交矩阵
+    mat4.ortho(projMat4,0,canvas.clientWidth,canvas.clientHeight,0,-1000,1000);
+
+    var vShader = gl.createShader(gl.VERTEX_SHADER);
+    var fShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+    //指定shader script
+    gl.shaderSource(vShader, vShaderScript);
+    gl.shaderSource(fShader, fShaderScript);
+
+    //编译shader
+    gl.compileShader(vShader);
+    var err = gl.getShaderParameter(vShader, gl.COMPILE_STATUS);
+    if (err != true) {
+        console.error(gl.getShaderInfoLog(vShader));
+    }
+
+    gl.compileShader(fShader);
+    var err = gl.getShaderParameter(fShader, gl.COMPILE_STATUS);
+    if (err != true) {
+        console.error(gl.getShaderInfoLog(fShader));
+    }
+
+    //给program添加shader
+    var program = gl.createProgram();
+    gl.attachShader(program, vShader);
+    gl.attachShader(program, fShader);
+
+
+    //传递vshader里的vec3Position的索引
+    var vec3PositionIndex = 0;
+    var uvIndex = 1;
+
+    /**
+     * void bindAttribLocation(WebGLProgram? program, GLuint index, DOMString name);
+     */
+    gl.bindAttribLocation(program, vec3PositionIndex,  "vec3Position");
+    gl.bindAttribLocation(program, uvIndex,            "uvIndex");
+
+    //链接program
+    gl.linkProgram(program);
+    var err = gl.getProgramParameter(program, gl.LINK_STATUS);
+    if (err != true) {
+        console.error(gl.getProgramInfoLog(program));
+    }
+
+    gl.useProgram(program);
+
+    /*--真正的程序绘制步骤--*/
+    var dataArr = [
+        //x     y       z      u      v
+        0,      0,      0,      0,      0,
+        100,    0,      0,      1,      0,
+        100,    100,    0,      1,      1,
+        0,      100,    0,      0,      1
+    ];
+
+    var indexArr = [
+      0,  1,  2,  3,  0
+    ];
+
+    //创建buffer,并给buffer赋值
+    var buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataArr), gl.STATIC_DRAW);
+
+    var elementBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArr), gl.STATIC_DRAW);
+
+    //加载texture图片并进行texture的相关设置
+    initTexture("./images/nehe.gif");
+
+    //清除一次画布
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
+    //开启texture
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    //指定渲染0层的texture
+    var texLocation = gl.getUniformLocation(program, "texture");
+    gl.uniform1i(texLocation, 0);
+
+    gl.enableVertexAttribArray(vec3PositionIndex);
+    gl.vertexAttribPointer(vec3PositionIndex,  3, gl.FLOAT, false, 4 * 5, 0);
+    gl.enableVertexAttribArray(uvIndex);
+    gl.vertexAttribPointer(uvIndex,            2, gl.FLOAT, false, 4 * 5, 4 * 3);
+
+    var proj = gl.getUniformLocation(program,"proj");
+    gl.uniformMatrix4fv(proj, false, new Float32Array(projMat4));
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
+    gl.drawElements(gl.TRIANGLE_STRIP, 5, gl.UNSIGNED_SHORT, 0);
+
+    gl.useProgram(null);
+
+    function handleLoaderTexture(texture){
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+    function initTexture(url){
+      texture = gl.createTexture();
+      texture.image = new Image();
+      texture.image.src = url;
+      texture.image.onload = function(){
+          handleLoaderTexture(texture);
+      };
+    }
+</script>
+</body>
+</html>
