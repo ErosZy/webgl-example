@@ -3,172 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <script src="./libs/gl-matrix.js"></script>
 </head>
-<body>
-<canvas id="webgl-canvas" width="400" height="300" style="border:1px solid gray"></canvas>
+<body onload="start()">
+<canvas id="glcanvas" width="640" height="480"></canvas>
+<!-- Fragment shader program -->
+<script id="shader-fs" type="x-shader/x-fragment">
+        precision   highp        float;
+        uniform     sampler2D   texture;
+        varying     vec2        outUV;
+        void main(void){
+            gl_FragColor = texture2D(texture, outUV);
+        }
+    </script>
 
-<script src="./libs/gl-matrix.js"></script>
+<!-- Vertex shader program -->
+<script id="shader-vs" type="x-shader/x-vertex">
+      precision   highp        float;
+      attribute vec3 vec3Position;
+      attribute vec2 inUV;
 
-<!--
-vertex shader
-attribute 定义变量
-varying 在vs与fs之间传递数据的变量
-uniform 全局变量
-presicion 指定渲染精度（float精度）
--->
-<script id="shader-vs" type="text/html">
-    precision   lowp    float;
-    uniform     mat4    proj;
-    attribute   vec3    vec3Position;
-    attribute   vec2    uvIndex;
-    varying     vec2    outUV;
-    void main(void){
-        outUV = uvIndex;
-        gl_Position = proj * vec4(vec3Position,1);
-    }
-</script>
+      uniform mat4 proj;
 
-<!--frag shader-->
-<script id="shader-fs" type="text/html">
-    precision   lowp        float;
-    uniform     sampler2D   texture;
-    varying     vec2        outUV;
-    void main(void){
-        gl_FragColor = texture2D(texture, vec2(outUV.s, outUV.t));
-    }
-</script>
+      varying vec2 outUV;
+
+      void main(void) {
+        gl_Position = proj * vec4(vec3Position, 1.0);
+        outUV = inUV;
+      }
+    </script>
 
 <script>
+    var animate = window.requestAnimationFrame;
     var vShaderScript = document.getElementById("shader-vs").innerHTML;
     var fShaderScript = document.getElementById("shader-fs").innerHTML;
-    var canvas = document.getElementById("webgl-canvas");
+    var canvas = document.getElementById("glcanvas");
     var gl = canvas.getContext("webgl");
     var projMat4 = mat4.create();
-    var texture = null;
+    var vShader;
+    var fShader;
+    var vec3PositionIndex;
+    var inUV;
+    var buffer;
+    var texture;
+    var program;
 
-    //设置gl的视口大小
-    gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+    function start(){
+        gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+        mat4.ortho(projMat4,0,canvas.clientWidth,canvas.clientHeight,0,-1000,1000);
 
-    //创建正交矩阵
-    mat4.ortho(projMat4,0,canvas.clientWidth,canvas.clientHeight,0,-1000,1000);
+        initShaders();
+        initBuffers();
+        initTextures("./images/nehe.gif");
 
-    var vShader = gl.createShader(gl.VERTEX_SHADER);
-    var fShader = gl.createShader(gl.FRAGMENT_SHADER);
-
-    //指定shader script
-    gl.shaderSource(vShader, vShaderScript);
-    gl.shaderSource(fShader, fShaderScript);
-
-    //编译shader
-    gl.compileShader(vShader);
-    var err = gl.getShaderParameter(vShader, gl.COMPILE_STATUS);
-    if (err != true) {
-        console.error(gl.getShaderInfoLog(vShader));
+        setTimeout(function(){
+            drawScene();
+        },500);
     }
 
-    gl.compileShader(fShader);
-    var err = gl.getShaderParameter(fShader, gl.COMPILE_STATUS);
-    if (err != true) {
-        console.error(gl.getShaderInfoLog(fShader));
+    function initShaders(){
+        vShader = gl.createShader(gl.VERTEX_SHADER);
+        fShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+        //指定shader script
+        gl.shaderSource(vShader, vShaderScript);
+        gl.shaderSource(fShader, fShaderScript);
+
+        //编译shader
+        gl.compileShader(vShader);
+        var err = gl.getShaderParameter(vShader, gl.COMPILE_STATUS);
+        if (err != true) {
+            console.error(gl.getShaderInfoLog(vShader));
+        }
+
+        gl.compileShader(fShader);
+        var err = gl.getShaderParameter(fShader, gl.COMPILE_STATUS);
+        if (err != true) {
+            console.error(gl.getShaderInfoLog(fShader));
+        }
+
+        //给program添加shader
+        program = gl.createProgram();
+        gl.attachShader(program, vShader);
+        gl.attachShader(program, fShader);
+
+        //链接program
+        gl.linkProgram(program);
+        var err = gl.getProgramParameter(program, gl.LINK_STATUS);
+        if (err != true) {
+            console.error(gl.getProgramInfoLog(program));
+        }
+
+        gl.useProgram(program);
+
+        vec3PositionIndex = gl.getAttribLocation(program,"vec3Position");
+        inUV = gl.getAttribLocation(program,"inUV");
     }
 
-    //给program添加shader
-    var program = gl.createProgram();
-    gl.attachShader(program, vShader);
-    gl.attachShader(program, fShader);
+    function initBuffers(){
+        var dataArr = [
+            //x     y       z      u      v
+            0,      0,      0,      0,      0,
+            400,    0,      0,      1,      0,
+            400,    400,    0,      1,      1,
 
+            0,      0,      0,      0,      0,
+            400,    400,    0,      1,      1,
+            0,      400,    0,      0,      1
 
-    //传递vshader里的vec3Position的索引
-    var vec3PositionIndex = 0;
-    var uvIndex = 1;
+        ];
 
-    /**
-     * void bindAttribLocation(WebGLProgram? program, GLuint index, DOMString name);
-     */
-    gl.bindAttribLocation(program, vec3PositionIndex,  "vec3Position");
-    gl.bindAttribLocation(program, uvIndex,            "uvIndex");
-
-    //链接program
-    gl.linkProgram(program);
-    var err = gl.getProgramParameter(program, gl.LINK_STATUS);
-    if (err != true) {
-        console.error(gl.getProgramInfoLog(program));
+        buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataArr), gl.STATIC_DRAW);
     }
 
-    gl.useProgram(program);
+    function initTextures(url){
+        texture = gl.createTexture();
+        texture.image = new Image();
+        texture.image.src = url;
+        texture.image.onload = function(){
+            handleLoaderTexture(texture);
+        };
+    }
 
-    /*--真正的程序绘制步骤--*/
-    var dataArr = [
-        //x     y       z      u      v
-        0,      0,      0,      0,      0,
-        100,    0,      0,      1,      0,
-        100,    100,    0,      1,      1,
-        0,      100,    0,      0,      1
-    ];
+    function drawScene(){
+        //清除一次画布
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
-    var indexArr = [
-      0,  1,  2,  3,  0
-    ];
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-    //创建buffer,并给buffer赋值
-    var buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(dataArr), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(vec3PositionIndex);
+        gl.vertexAttribPointer(vec3PositionIndex,  3, gl.FLOAT, false, 4 * 5, 0);
 
-    var elementBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexArr), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(inUV);
+        gl.vertexAttribPointer(inUV,               2, gl.FLOAT, false, 4 * 5, 4 * 3);
 
-    //加载texture图片并进行texture的相关设置
-    initTexture("./images/nehe.gif");
+        gl.uniformMatrix4fv(gl.getUniformLocation(program,"proj"), false, new Float32Array(projMat4));
 
-    //清除一次画布
-    gl.clearColor(0, 0, 0, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-
-    //开启texture
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-
-    //指定渲染0层的texture
-    var texLocation = gl.getUniformLocation(program, "texture");
-    gl.uniform1i(texLocation, 0);
-
-    gl.enableVertexAttribArray(vec3PositionIndex);
-    gl.vertexAttribPointer(vec3PositionIndex,  3, gl.FLOAT, false, 4 * 5, 0);
-    gl.enableVertexAttribArray(uvIndex);
-    gl.vertexAttribPointer(uvIndex,            2, gl.FLOAT, false, 4 * 5, 4 * 3);
-
-    var proj = gl.getUniformLocation(program,"proj");
-    gl.uniformMatrix4fv(proj, false, new Float32Array(projMat4));
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
-    gl.drawElements(gl.TRIANGLE_STRIP, 5, gl.UNSIGNED_SHORT, 0);
-
-    gl.useProgram(null);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
 
     function handleLoaderTexture(texture){
         gl.bindTexture(gl.TEXTURE_2D, texture);
-
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
-    function initTexture(url){
-      texture = gl.createTexture();
-      texture.image = new Image();
-      texture.image.src = url;
-      texture.image.onload = function(){
-          handleLoaderTexture(texture);
-      };
-    }
+
+    //requestAnimationFrame pollyfill
+    (function() {
+        'use strict';
+
+        var vendors = ['webkit', 'moz'];
+        for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
+            var vp = vendors[i];
+            window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
+            window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
+            || window[vp+'CancelRequestAnimationFrame']);
+        }
+        if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) // iOS6 is buggy
+                || !window.requestAnimationFrame || !window.cancelAnimationFrame) {
+            var lastTime = 0;
+            window.requestAnimationFrame = function(callback) {
+                var now = Date.now();
+                var nextTime = Math.max(lastTime + 16, now);
+                return setTimeout(function() { callback(lastTime = nextTime); },
+                        nextTime - now);
+            };
+            window.cancelAnimationFrame = clearTimeout;
+        }
+    }());
 </script>
 </body>
 </html>
