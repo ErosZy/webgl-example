@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a26d9f7-e6d5-4aa8-983a-37a7ae03a1dc" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webgl-multi-texture-10.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webgl-texture-08.2.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/webgl-texture-pointer-09.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webgl-texture-08.html" afterPath="$PROJECT_DIR$/webgl-texture-08.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="webgl-learn.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,37 +28,50 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="webgl-texture-08.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="webgl-texture-08.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webgl-texture-08.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5541958">
-              <caret line="139" column="0" selection-start-line="139" selection-start-column="0" selection-end-line="142" selection-end-column="67" />
-              <folding>
-                <marker date="1454422525000" expanded="true" signature="451:516" placeholder="{...}" />
-                <marker date="1454422525000" expanded="true" signature="509:516" placeholder="{...}" />
-                <marker date="1454422525000" expanded="true" signature="788:873" placeholder="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="webgl-animate-05.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webgl-animate-05.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.5">
-              <caret line="175" column="5" selection-start-line="170" selection-start-column="4" selection-end-line="175" selection-end-column="5" />
+            <state vertical-scroll-proportion="-11.458333">
+              <caret line="146" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="webgl-01.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webgl-01.html">
+      <file leaf-file-name="webgl-texture-08.2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webgl-texture-08.2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="102" column="7" selection-start-line="102" selection-start-column="7" selection-end-line="102" selection-end-column="7" />
+            <state vertical-scroll-proportion="-11.25">
+              <caret line="18" column="9" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
               <folding>
-                <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <marker date="1454665812000" expanded="true" signature="492:581" placeholder="{...}" />
+                <marker date="1454665812000" expanded="true" signature="849:934" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webgl-texture-pointer-09.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webgl-texture-pointer-09.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-116.875">
+              <caret line="187" column="0" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
+              <folding>
+                <marker date="1454666586000" expanded="true" signature="451:516" placeholder="{...}" />
+                <marker date="1454666586000" expanded="true" signature="788:873" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="webgl-multi-texture-10.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/webgl-multi-texture-10.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="4.667221">
+              <caret line="187" column="0" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
+              <folding>
+                <marker date="1454666616000" expanded="true" signature="451:516" placeholder="{...}" />
+                <marker date="1454666616000" expanded="true" signature="788:873" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -88,6 +105,9 @@
         <option value="$PROJECT_DIR$/webgl-01.html" />
         <option value="$PROJECT_DIR$/test.html" />
         <option value="$PROJECT_DIR$/webgl-texture-08.html" />
+        <option value="$PROJECT_DIR$/webgl-texture-08.2.html" />
+        <option value="$PROJECT_DIR$/webgl-texture-pointer-09.html" />
+        <option value="$PROJECT_DIR$/webgl-multi-texture-10.html" />
       </list>
     </option>
   </component>
@@ -103,9 +123,9 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="43" />
+    <option name="x" value="45" />
     <option name="y" value="23" />
-    <option name="width" value="1323" />
+    <option name="width" value="1321" />
     <option name="height" value="745" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -131,6 +151,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -152,12 +174,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../webgl-examples-gh-pages" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="recentsLimit" value="5" />
@@ -511,15 +531,16 @@
       <workItem from="1454247972512" duration="2851000" />
       <workItem from="1454294433452" duration="20000" />
       <workItem from="1454334913872" duration="2494000" />
-      <workItem from="1454420416309" duration="2107000" />
+      <workItem from="1454420416309" duration="2576000" />
+      <workItem from="1454665221673" duration="870000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30101000" />
+    <option name="totallyTimeSpent" value="31440000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="43" y="23" width="1323" height="745" extended-state="6" />
+    <frame x="45" y="23" width="1321" height="745" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -532,7 +553,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3715847" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3776388" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -567,12 +588,34 @@
     <entry file="file://$PROJECT_DIR$/webgl-texture-08.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="117" column="49" selection-start-line="117" selection-start-column="49" selection-end-line="117" selection-end-column="49" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-animate-05.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="175" column="5" selection-start-line="170" selection-start-column="4" selection-end-line="175" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-01.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="102" column="7" selection-start-line="102" selection-start-column="7" selection-end-line="102" selection-end-column="7" />
           <folding>
-            <marker date="1454422525000" expanded="true" signature="451:516" placeholder="{...}" />
-            <marker date="1454422525000" expanded="true" signature="509:516" placeholder="{...}" />
-            <marker date="1454422525000" expanded="true" signature="788:873" placeholder="{...}" />
+            <element signature="n#style#0;n#canvas#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-texture-08.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="117" column="49" selection-start-line="117" selection-start-column="49" selection-end-line="117" selection-end-column="49" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -719,20 +762,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/webgl-animate-05.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.5">
+        <state vertical-scroll-proportion="0.0">
           <caret line="175" column="5" selection-start-line="170" selection-start-column="4" selection-end-line="175" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-texture-08.2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.25">
+          <caret line="18" column="9" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
+          <folding>
+            <marker date="1454665812000" expanded="true" signature="492:581" placeholder="{...}" />
+            <marker date="1454665812000" expanded="true" signature="849:934" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/webgl-texture-08.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5541958">
-          <caret line="139" column="0" selection-start-line="139" selection-start-column="0" selection-end-line="142" selection-end-column="67" />
+        <state vertical-scroll-proportion="-11.458333">
+          <caret line="146" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-texture-pointer-09.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-116.875">
+          <caret line="187" column="0" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
           <folding>
-            <marker date="1454422525000" expanded="true" signature="451:516" placeholder="{...}" />
-            <marker date="1454422525000" expanded="true" signature="509:516" placeholder="{...}" />
-            <marker date="1454422525000" expanded="true" signature="788:873" placeholder="{...}" />
+            <marker date="1454666586000" expanded="true" signature="451:516" placeholder="{...}" />
+            <marker date="1454666586000" expanded="true" signature="788:873" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl-multi-texture-10.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.667221">
+          <caret line="187" column="0" selection-start-line="187" selection-start-column="0" selection-end-line="187" selection-end-column="0" />
+          <folding>
+            <marker date="1454666616000" expanded="true" signature="451:516" placeholder="{...}" />
+            <marker date="1454666616000" expanded="true" signature="788:873" placeholder="{...}" />
           </folding>
         </state>
       </provider>

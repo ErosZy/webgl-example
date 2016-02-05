@@ -11,11 +11,12 @@
 <script id="shader-fs" type="x-shader/x-fragment">
         precision   highp        float;
         uniform     sampler2D   texture;
+        uniform     float       animate;
         varying     vec2        outUV;
         void main(void){
-            gl_FragColor = texture2D(texture, outUV);
+            gl_FragColor = texture2D(texture, vec2(outUV.s+animate,outUV.t));
         }
-    </script>
+</script>
 
 <!-- Vertex shader program -->
 <script id="shader-vs" type="x-shader/x-vertex">
@@ -55,6 +56,14 @@
         initShaders();
         initBuffers();
         initTextures("./images/nehe.gif");
+        draw();
+    }
+
+    function draw(){
+        drawScene();
+        animate(function(){
+            draw();
+        });
     }
 
     function initShaders(){
@@ -123,7 +132,10 @@
         };
     }
 
+    var animateX = 0;
     function drawScene(){
+        animateX += 0.01;
+
         //清除一次画布
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -137,6 +149,7 @@
         gl.vertexAttribPointer(inUV,               2, gl.FLOAT, false, 4 * 5, 4 * 3);
 
         gl.uniformMatrix4fv(gl.getUniformLocation(program,"proj"), false, new Float32Array(projMat4));
+        gl.uniform1f(gl.getUniformLocation(program,"animate"),animateX);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -150,12 +163,15 @@
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+
+        /**
+         const GLenum REPEAT                         = 0x2901;
+         const GLenum CLAMP_TO_EDGE                  = 0x812F;
+         const GLenum MIRRORED_REPEAT                = 0x8370;
+         */
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
         gl.bindTexture(gl.TEXTURE_2D, null);
-
-        drawScene();
-
     }
 
 
